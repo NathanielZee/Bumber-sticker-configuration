@@ -1,0 +1,243 @@
+you are building a Sticker Configurator web app based on the client’s provided HTML/CSS/JS code below.
+
+Here’s the code sample the client gave (keep the layout and style exactly the same, including fonts, inputs, and buttons):
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 20px;
+  }
+  #custom-calculator {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  label {
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+  }
+  input, select {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #000;
+    background-color: #fff;
+  }
+  .hidden { display: none; }
+  .error { color: red; font-size: 0.8em; margin-top: 3px; }
+  #total-price {
+    font-weight: bold;
+    color: #27ae60;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #price-per-sticker, #savings-info, #shipping-banner {
+    font-size: 0.9em;
+    margin-top: -10px;
+  }
+  #savings-info { color: red; }
+  .upload-box {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background-color: #fafafa;
+  }
+  .upload-box input[type="file"] { display: none; }
+  .upload-box label {
+    display: block;
+    cursor: pointer;
+    color: #000;
+    font-weight: 600;
+  }
+  .upload-info {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: #999;
+  }
+  .button-toggle { display: flex; gap: 10px; flex-wrap: wrap; }
+  .button-toggle button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .button-toggle button.active {
+    background-color: #000;
+    color: #fff;
+  }
+  #ready-to-order {
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 1em;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+</style>
+<form id="custom-calculator">
+<label>Select Size
+    <select id="size">
+      <option value="">-- Select --</option>
+      <option value="50">50mm x 50mm</option>
+      <option value="75">75mm x 75mm</option>
+      <option value="100">100mm x 100mm</option>
+      <option value="125">125mm x 125mm</option>
+      <option value="custom">Custom Size</option>
+    </select>
+</label>
+
+<div id="custom-dimensions" class="hidden">
+  <label>Custom Length (mm)
+    <input type="number" id="custom-length" placeholder="Min 20mm, Max 1000mm">
+    <div id="length-error" class="error hidden">Please enter a value between 20 and 1000</div>
+  </label>
+
+  <label>Custom Width (mm)
+    <input type="number" id="custom-width" placeholder="Min 20mm, Max 1000mm">
+    <div id="width-error" class="error hidden">Please enter a value between 20 and 1000</div>
+  </label>
+</div>
+
+<label>Quantity
+  <select id="quantity">
+    <option value="">-- Select --</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+    <option value="200">200</option>
+    <option value="300">300</option>
+    <option value="500">500</option>
+    <option value="1000">1000</option>
+    <option value="2000">2000</option>
+    <option value="3000">3000</option>
+    <option value="5000">5000</option>
+    <option value="10000">10000</option>
+    <option value="15000">15000</option>
+    <option value="20000">20000</option>
+    <option value="custom">Custom Qty</option>
+  </select>
+</label>
+<div id="custom-qty-section" class="hidden">
+  <label>Custom Quantity
+    <input type="number" id="custom-quantity" placeholder="Enter quantity between 10 and 200000">
+    <div id="quantity-error" class="error hidden">Please enter a quantity between 10 and 200000</div>
+  </label>
+</div>
+
+<div class="button-toggle">
+  <label>How will you prepare your artwork?
+  <button type="button" id="btn-artwork">I have artwork files ready</button>
+  <button type="button" id="btn-design">I'd like to design my own</button>
+  <button type="button" id="btn-reorder">I need design help</button>
+</label>
+</div>
+
+<div id="upload-artwork-section" class="upload-box hidden">
+  <label for="upload-artwork">Upload Artwork</label>
+  <input type="file" id="upload-artwork" name="upload-artwork" />
+  <div class="upload-info">Accepted: ai, eps, pdf, png, jpg - Max 250MB</div>
+</div>
+
+<div id="shipping-method-section" class="hidden">
+  <label>Shipping Method
+    <select id="shipping-method">
+      <option value="13.95">Express $13.95</option>
+      <option value="8.95">Standard $8.95</option>
+    </select>
+  </label>
+</div>
+
+<div id="shipping-banner"></div>
+
+<div id="price-summary">
+  <div id="total-price">$0.00 <span style="font-size: 0.5em; color:#000">(includes GST)</span></div>
+  <div id="price-per-sticker"></div>
+  <div id="savings-info"></div>
+</div>
+
+<button type="submit" id="ready-to-order">Ready to order?</button>
+</form>
+
+<script>
+const uploadSection = document.getElementById('upload-artwork-section');
+const btnArtwork = document.getElementById('btn-artwork');
+const btnDesign = document.getElementById('btn-design');
+const btnReorder = document.getElementById('btn-reorder');
+const shippingSection = document.getElementById('shipping-method-section');
+const shippingBanner = document.getElementById('shipping-banner');
+const totalPriceDisplay = document.getElementById('total-price');
+const customDim = document.getElementById('custom-dimensions');
+const customQtySection = document.getElementById('custom-qty-section');
+const sizeSelect = document.getElementById('size');
+const qtySelect = document.getElementById('quantity');
+
+function resetButtons() {
+  btnArtwork.classList.remove('active');
+  btnDesign.classList.remove('active');
+  btnReorder.classList.remove('active');
+}
+
+btnArtwork.addEventListener('click', () => {
+  resetButtons();
+  btnArtwork.classList.add('active');
+  uploadSection.classList.remove('hidden');
+});
+
+btnDesign.addEventListener('click', () => {
+  resetButtons();
+  btnDesign.classList.add('active');
+  uploadSection.classList.add('hidden');
+});
+
+btnReorder.addEventListener('click', () => {
+  resetButtons();
+  btnReorder.classList.add('active');
+  uploadSection.classList.add('hidden');
+});
+
+sizeSelect.addEventListener('change', () => {
+  customDim.classList.toggle('hidden', sizeSelect.value !== 'custom');
+});
+
+qtySelect.addEventListener('change', () => {
+  customQtySection.classList.toggle('hidden', qtySelect.value !== 'custom');
+});
+</script>
+
+Now, I want you to:
+
+Organize the project structure:
+
+index.html → clean semantic HTML only.
+
+styles.css → all CSS styling moved here.
+
+calculator.js → logic for pricing & UI interactions.
+
+Keep functionality identical to the original code at this stage (size dropdown, custom size inputs, quantity dropdown, artwork/design buttons, upload section toggle, etc.).
+
+Make the HTML structure semantic and easy to integrate later (use <main>, <section>, <form>, etc. instead of everything in <div>).
+
+Ensure responsiveness (mobile-first, test for small screens).
+
+After restructuring, confirm that the current behaviors still work (upload toggle, custom size toggle, custom quantity toggle).
