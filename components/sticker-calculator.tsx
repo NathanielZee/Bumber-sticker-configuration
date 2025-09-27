@@ -312,18 +312,10 @@ export default function StickerCalculator() {
                 </div>
                 <select
                   id="size"
-                  value={showCustomSize ? "custom" : selectedSize?.label || ""}
+                  value={selectedSize?.label || ""}
                   onChange={(e) => {
-                    if (e.target.value === "custom") {
-                      setShowCustomSize(true)
-                      setSelectedSize(null)
-                    } else {
-                      setShowCustomSize(false)
-                      const size = sizes.find((s) => s.label === e.target.value)
-                      setSelectedSize(size || null)
-                      setCustomWidth(null)
-                      setCustomHeight(null)
-                    }
+                    const size = sizes.find((s) => s.label === e.target.value)
+                    setSelectedSize(size || null)
                   }}
                   className="w-full p-2 sm:p-3 border border-gray-300 rounded-md text-gray-900 bg-white appearance-none text-sm sm:text-base"
                   style={{
@@ -334,32 +326,14 @@ export default function StickerCalculator() {
                   }}
                 >
                   <option value="">Select</option>
-                  {sizes.map((s) => (
+                  {sizes.slice(0, 3).map((s) => (
                     <option key={s.label} value={s.label}>
                       {s.label}
                     </option>
                   ))}
-                  <option value="custom">Custom size</option>
                 </select>
 
-                {showCustomSize && (
-                  <div className="flex gap-2 mt-2">
-                    <input
-                      type="number"
-                      placeholder="Width (mm)"
-                      className="border border-gray-300 rounded-md p-2 w-1/2 text-sm sm:text-base"
-                      value={customWidth ?? ""}
-                      onChange={(e) => setCustomWidth(Number(e.target.value) || null)}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Height (mm)"
-                      className="border border-gray-300 rounded-md p-2 w-1/2 text-sm sm:text-base"
-                      value={customHeight ?? ""}
-                      onChange={(e) => setCustomHeight(Number(e.target.value) || null)}
-                    />
-                  </div>
-                )}
+                {/* Custom size input fields removed */}
               </div>
 
               <div className="space-y-2">
@@ -607,7 +581,7 @@ export default function StickerCalculator() {
 
               {artworkMethod === "design" && (
                 <div className="p-4 border border-gray-300 rounded bg-gray-50">
-                  <p className="text-gray-700 text-sm">Redirecting to Antigro Designer...</p>
+                  <p className="text-gray-700 text-sm">Redirecting to Sticker Ninja Designer...</p>
                   {/* Later you'll integrate with the actual design tool */}
                 </div>
               )}
